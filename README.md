@@ -54,3 +54,7 @@ go build         # single binary
 
 `tools/mkstations.py` regenerates the embedded stop index
 (`data/stations.json`) from the official VVS Haltestellen registry.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
