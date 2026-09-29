@@ -634,7 +634,7 @@ const usage = `vvs — Stuttgart region local transit (VVS) via the EFA-BW API
   --limit N    max departures (default 10)
 
 Station names resolve offline against the embedded VVS stop index; raw ids
-("5006169", "de:08111:6169") work too. When-phrases work inline:
+("5006022", "de:08111:6022") work too. When-phrases work inline:
 "vvs Feuerbach to Schlossplatz um morgen 8:00". Home config: ~/.config/vvs.json
 `
 

@@ -4,7 +4,7 @@
 Source: opendata-oepnv.de, dataset "haltestellen-vvs" (VVS Haltestellen).
 Fetch the details page, pick the newest vvs_haltestelle_jNN.csv link, convert
 to a minimal JSON list of {name, place, id} where id is the DHID the EFA API
-accepts directly ("de:08111:6169").
+accepts directly ("de:08111:6022").
 
     curl -sS -L -o /tmp/h.csv <url> && python3 tools/mkstations.py /tmp/h.csv
 """

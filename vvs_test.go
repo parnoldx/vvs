@@ -1,5 +1,4 @@
-// Offline checks against the saved EFA responses in tests/fixtures —
-// the Go port of tests/vvs.test.js. Run: go test ./...
+// Offline checks against the saved EFA responses in tests/fixtures. Run: go test ./...
 package main
 
 import (
@@ -30,17 +29,17 @@ func TestParseDepartures(t *testing.T) {
 	}
 	var first *Departure
 	for i := range rows {
-		if rows[i].Line == "U8" {
+		if rows[i].Line == "U7" {
 			first = &rows[i]
 		}
 	}
 	if first == nil {
-		t.Fatal("U8 row missing")
+		t.Fatal("U7 row missing")
 	}
 	if !first.Local || first.Mot != 3 {
-		t.Fatalf("U8 not local: %+v", first)
+		t.Fatalf("U7 not local: %+v", first)
 	}
-	okDir := first.Dir == "Vaihingen Bf" || first.Dir == "Nellingen Ostfildern" || first.Dir == "Heumaden"
+	okDir := first.Dir == "Mönchfeld" || first.Dir == "Nellingen Ostfildern"
 	if !okDir {
 		t.Fatalf("unexpected U8 direction %q", first.Dir)
 	}
@@ -89,23 +88,23 @@ func TestParseTrips(t *testing.T) {
 	if len(tr.Dep) != 5 || tr.Dep[2] != ':' || len(tr.Arr) != 5 || tr.Arr[2] != ':' {
 		t.Fatalf("bad trip times %q %q", tr.Dep, tr.Arr)
 	}
-	if tr.Duration != "0:15" || tr.Changes != 0 || len(tr.Legs) != 1 {
+	if tr.Duration != "0:11" || tr.Changes != 0 || len(tr.Legs) != 1 {
 		t.Fatalf("bad trip head: %+v", tr)
 	}
 	leg := tr.Legs[0]
-	if leg.Line != "U5" || leg.Mot == nil || *leg.Mot != 3 || leg.Walk {
+	if leg.Line != "U6" || leg.Mot == nil || *leg.Mot != 3 || leg.Walk {
 		t.Fatalf("bad leg: %+v", leg)
 	}
-	if leg.From != "Möhringen Bf" {
+	if leg.From != "Schlossplatz" {
 		t.Fatalf("bad from %q", leg.From)
 	}
-	if !strings.Contains(leg.To, "Schlossplatz") {
+	if !strings.Contains(leg.To, "Feuerbach") {
 		t.Fatalf("bad to %q", leg.To)
 	}
 	if tr.Dep > tr.Arr {
 		t.Fatal("dep after arr")
 	}
-	// every trip must be SSB/local (U-Bahn to Schlossplatz)
+	// every trip must be SSB/local (U-Bahn/S-Bahn to Feuerbach)
 	for _, trip := range trips {
 		for _, l := range trip.Legs {
 			if !l.Walk && (l.Mot == nil || !isLocalMot(*l.Mot)) {
@@ -166,11 +165,11 @@ func TestParseWhen(t *testing.T) {
 
 func TestLocalSearch(t *testing.T) {
 	// embedded index: exact names, abbreviations, umlaut folding
-	if s := resolveStop("Möhringen Bahnhof"); s == nil || s.ID != "de:08111:6169" {
-		t.Fatalf("möhringen bahnhof -> %+v", s)
+	if s := resolveStop("Feuerbach"); s == nil || s.ID != "de:08111:6157" {
+		t.Fatalf("feuerbach -> %+v", s)
 	}
-	if s := resolveStop("mohringen"); s == nil || s.Name != "Möhringen Bf" {
-		t.Fatalf("folded mohringen -> %+v", s)
+	if s := resolveStop("muhlhausen"); s == nil || s.Name != "Mühlhausen" {
+		t.Fatalf("folded muhlhausen -> %+v", s)
 	}
 	if s := resolveStop("schlossplatz"); s == nil || s.ID != "de:08111:6022" {
 		t.Fatalf("schlossplatz -> %+v (want the Stuttgart one)", s)
@@ -182,12 +181,12 @@ func TestLocalSearch(t *testing.T) {
 		t.Fatalf("nonsense should miss, got %+v", s)
 	}
 	// raw ids still pass through untouched
-	if s := asStop("5006169"); s == nil || s.ID != "5006169" {
+	if s := asStop("5006022"); s == nil || s.ID != "5006022" {
 		t.Fatalf("raw id -> %+v", s)
 	}
-	// top-8 wizard results are all Möhringen-ish for a prefix query
-	hits := searchStations("möhring")
-	if len(hits) == 0 {
+	// top-8 wizard results lead with the exact-name match for a prefix query
+	hits := searchStations("feuerb")
+	if len(hits) == 0 || hits[0].Name != "Feuerbach" {
 		t.Fatal("prefix query lost")
 	}
 }
