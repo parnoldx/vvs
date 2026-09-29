@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <rect width="40" height="40" rx="8" fill="#1a1b26"/>
+  <rect x="3.5" y="3.5" width="33" height="33" rx="6.5" fill="#202230" stroke="#383d54" stroke-width="1"/>
+  
+  <!-- Rails -->
+  <line x1="10" y1="33" x2="30" y2="33" stroke="#565f89" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="14" y1="33" x2="11" y2="36" stroke="#565f89" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="26" y1="33" x2="29" y2="36" stroke="#565f89" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Train body -->
+  <path d="M12 9 C12 7.5, 14 6, 20 6 C26 6, 28 7.5, 28 9 L28 27 C28 28.5, 26 29, 20 29 C14 29, 12 28.5, 12 27 Z"
+        fill="#151620" stroke="#7dcfff" stroke-width="1.5"/>
+
+  <!-- Windshield -->
+  <path d="M14.5 10 C14.5 9, 16 8, 20 8 C24 8, 25.5 9, 25.5 10 L25.5 17 L14.5 17 Z"
+        fill="#92b4ff" fill-opacity="0.35" stroke="#92b4ff" stroke-width="1"/>
+
+  <!-- Headlights -->
+  <circle cx="16" cy="24" r="1.5" fill="#e0af68"/>
+  <circle cx="24" cy="24" r="1.5" fill="#e0af68"/>
+
+  <!-- Center transit badge / accent -->
+  <rect x="18" y="23" width="4" height="2" rx="0.5" fill="#b2d984"/>
+
+  <!-- Destination display above windshield -->
+  <rect x="17" y="7" width="6" height="1.5" rx="0.5" fill="#b2d984"/>
+</svg>

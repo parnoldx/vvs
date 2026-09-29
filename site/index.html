@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="en" data-theme="night">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>vvs. — Stuttgart local transit from your terminal.</title>
+    <meta
+      name="description"
+      content="Stuttgart region local transit right from your terminal — live departures boards and door-to-door trips (VVS/SSB) via the EFA-BW API as a single static Go binary. Offline stop index, natural time phrases, and zero API keys."
+    />
+    <meta name="theme-color" content="#1a1b26" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="vvs. — Stuttgart local transit from your terminal." />
+    <meta
+      property="og:description"
+      content="Stuttgart region local transit right from your terminal — live departures boards and door-to-door trips (VVS/SSB) via the EFA-BW API as a single static Go binary. Offline stop index, natural time phrases, and zero API keys."
+    />
+    <meta property="og:site_name" content="vvs." />
+    <meta property="og:url" content="https://parnoldx.github.io/vvs/" />
+    <link rel="canonical" href="https://parnoldx.github.io/vvs/" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script src="assets/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="vvs home">
+          <img class="brand-icon" src="assets/favicon.svg" alt="" width="28" height="28" />
+          <span>vvs<span class="accent">.</span></span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+          <a class="desktop-link" href="#departures">Departures</a>
+          <a class="desktop-link" href="#trips">Trips</a>
+          <a class="desktop-link" href="#stops">Stops</a>
+          <a class="desktop-link" href="#commands">Commands</a>
+          <a href="#install">Install</a>
+          <a href="https://github.com/parnoldx/vvs">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <div class="container">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-grid">
+            <div>
+              <div class="eyebrow">
+                <span class="status-dot" aria-hidden="true"></span>Stuttgart Region Transit · EFA-BW
+              </div>
+              <h1 id="hero-title">
+                Instant departures.<br />Door-to-door trips.<br /><span class="accent">vvs.</span>
+              </h1>
+              <p class="hero-copy">
+                Stuttgart regional transit directly in your terminal. Live departure boards
+                and door-to-door trip itineraries powered straight by the official EFA-BW API —
+                lightning fast, zero API keys, offline stop resolution, and pure Go.
+              </p>
+              <div class="hero-actions">
+                <a class="button" href="#install">Install vvs <span aria-hidden="true">↗</span></a>
+                <a class="text-link" href="#commands">Explore commands</a>
+              </div>
+              <div class="compat">
+                <span class="file-pill sheet">Direct EFA-BW</span>
+                <span class="file-pill">Zero API Key</span>
+                <span class="file-pill slides">Offline Stop Index</span>
+                <span class="file-pill cyan">Natural Time Phrases</span>
+                <span class="file-pill">Single Go Binary</span>
+                <span class="file-pill">JSON Piping</span>
+              </div>
+              <p class="small-note">Free &amp; open source · Linux · Local transit CLI</p>
+            </div>
+
+            <!-- Desktop Window Preview -->
+            <div class="preview">
+              <div class="desktop">
+                <div class="desktop-bar" aria-hidden="true">
+                  <span><span class="workspace-number">1</span>&nbsp; 2 &nbsp; 3 &nbsp; / &nbsp; transit</span>
+                  <span>✦ &nbsp; ◇ &nbsp; 20:04</span>
+                </div>
+                <div class="desktop-wallpaper" aria-hidden="true"><span>✦</span></div>
+                <div class="app-window">
+                  <div class="app-title">
+                    <strong><span class="window-mark">✦</span> vvs</strong>
+                    <span class="preview-badge">LIVE CLI</span>
+                  </div>
+                  <div
+                    class="demo-tabs"
+                    role="tablist"
+                    aria-label="Explore vvs CLI modes"
+                    data-demo-tabs
+                    hidden
+                  >
+                    <button
+                      type="button"
+                      id="tab-departures"
+                      role="tab"
+                      data-demo-tab
+                      aria-selected="true"
+                      aria-controls="demo-departures"
+                    >
+                      Departures
+                    </button>
+                    <button
+                      type="button"
+                      id="tab-trips"
+                      role="tab"
+                      data-demo-tab
+                      aria-selected="false"
+                      aria-controls="demo-trips"
+                      tabindex="-1"
+                    >
+                      Trips
+                    </button>
+                    <button
+                      type="button"
+                      id="tab-wizard"
+                      role="tab"
+                      data-demo-tab
+                      aria-selected="false"
+                      aria-controls="demo-wizard"
+                      tabindex="-1"
+                    >
+                      Interactive
+                    </button>
+                  </div>
+
+                  <!-- Tab 1: Departures Board Mock -->
+                  <div id="demo-departures" class="demo-panel" role="tabpanel" aria-labelledby="tab-departures" tabindex="0">
+                    <div class="cli-mock">
+                      <div class="cli-prompt-line">
+                        <span class="cli-prompt-sym">~ ❯</span>
+                        <span class="cli-cmd">vvs departures Schlossplatz --limit 6</span>
+                      </div>
+                      <div class="cli-header-row">
+                        <span>Schlossplatz — departures</span>
+                        <span class="cli-badge-live">LIVE</span>
+                      </div>
+                      <table class="cli-table" aria-label="Sample departure rows">
+                        <tbody>
+                          <tr>
+                            <td class="cli-time">20:04</td>
+                            <td class="cli-line"><span class="line-tag ubahn">U15</span></td>
+                            <td class="cli-dir">Ruhbank (Fernsehturm)</td>
+                            <td class="cli-plat">Gleis 2</td>
+                            <td class="cli-status status-ontime">on time</td>
+                          </tr>
+                          <tr>
+                            <td class="cli-time">20:05</td>
+                            <td class="cli-line"><span class="line-tag ubahn">U6</span></td>
+                            <td class="cli-dir">Gerlingen</td>
+                            <td class="cli-plat">Gleis 1</td>
+                            <td class="cli-status status-delay">+7'</td>
+                          </tr>
+                          <tr>
+                            <td class="cli-time">20:06</td>
+                            <td class="cli-line"><span class="line-tag ubahn">U12</span></td>
+                            <td class="cli-dir">Dürrlewang</td>
+                            <td class="cli-plat">Gleis 1</td>
+                            <td class="cli-status status-delay">+4'</td>
+                          </tr>
+                          <tr>
+                            <td class="cli-time">20:06</td>
+                            <td class="cli-line"><span class="line-tag ubahn">U7</span></td>
+                            <td class="cli-dir">Mönchfeld</td>
+                            <td class="cli-plat">Gleis 2</td>
+                            <td class="cli-status status-delay">+4'</td>
+                          </tr>
+                          <tr>
+                            <td class="cli-time">20:06</td>
+                            <td class="cli-line"><span class="line-tag bus">42</span></td>
+                            <td class="cli-dir">Erwin-Schoettle-Platz</td>
+                            <td class="cli-plat">Pos. 1</td>
+                            <td class="cli-status status-ontime">on time</td>
+                          </tr>
+                          <tr>
+                            <td class="cli-time">20:08</td>
+                            <td class="cli-line"><span class="line-tag ubahn">U12</span></td>
+                            <td class="cli-dir">Neckargröningen Remseck</td>
+                            <td class="cli-plat">Gleis 2</td>
+                            <td class="cli-status status-delay">+4'</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <!-- Tab 2: Trips Mock -->
+                  <div id="demo-trips" class="demo-panel" role="tabpanel" aria-labelledby="tab-trips" tabindex="0" hidden>
+                    <div class="cli-mock">
+                      <div class="cli-prompt-line">
+                        <span class="cli-prompt-sym">~ ❯</span>
+                        <span class="cli-cmd">vvs Feuerbach to Schlossplatz um morgen 8:00</span>
+                      </div>
+                      <div class="cli-header-row">
+                        <span>Feuerbach → Schlossplatz</span>
+                        <span style="font-size: 11px; color: var(--muted);">at 08:00</span>
+                      </div>
+                      <div class="trip-block">
+                        <div class="trip-overview">
+                          <span class="trip-span">08:01–08:14</span>
+                          <span class="trip-dur">0:13</span>
+                          <span class="trip-transfers">1× transfer</span>
+                        </div>
+                        <div class="trip-legs">
+                          <span class="walk-step">walk 0 min</span>
+                          <span>·</span>
+                          <span class="line-tag ubahn">U15</span>
+                          <span>to Pragsattel</span>
+                          <span>·</span>
+                          <span class="line-tag ubahn">U6</span>
+                        </div>
+                      </div>
+                      <div class="trip-block">
+                        <div class="trip-overview">
+                          <span class="trip-span">08:06–08:16</span>
+                          <span class="trip-dur">0:10</span>
+                          <span class="trip-transfers">0× direct</span>
+                        </div>
+                        <div class="trip-legs">
+                          <span class="line-tag ubahn">U6</span>
+                          <span>direct to Schlossplatz</span>
+                        </div>
+                      </div>
+                      <div class="trip-block">
+                        <div class="trip-overview">
+                          <span class="trip-span">08:15–08:26</span>
+                          <span class="trip-dur">0:11</span>
+                          <span class="trip-transfers">0× direct</span>
+                        </div>
+                        <div class="trip-legs">
+                          <span class="line-tag ubahn">U6</span>
+                          <span>direct to Schlossplatz</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Tab 3: Interactive Wizard Mock -->
+                  <div id="demo-wizard" class="demo-panel" role="tabpanel" aria-labelledby="tab-wizard" tabindex="0" hidden>
+                    <div class="cli-mock">
+                      <div class="cli-prompt-line">
+                        <span class="cli-prompt-sym">~ ❯</span>
+                        <span class="cli-cmd">vvs to</span>
+                      </div>
+                      <div class="wizard-box">
+                        <div class="wizard-input-row">
+                          <span style="color: var(--accent);">To</span>
+                          <span>feuerb</span><span class="wizard-cursor"></span>
+                        </div>
+                        <div class="wizard-hints">
+                          <span>[Tab] time: now &nbsp;·&nbsp; [↓↑] pick &nbsp;·&nbsp; [Enter] go &nbsp;·&nbsp; [Esc] quit</span>
+                        </div>
+                        <div class="wizard-list">
+                          <div class="wizard-item active">
+                            <span>&gt; Feuerbach</span>
+                            <span class="station-meta">de:08111:6157</span>
+                          </div>
+                          <div class="wizard-item">
+                            <span>&nbsp;&nbsp;Feuerbacher Weg</span>
+                            <span class="station-meta">de:08111:2454</span>
+                          </div>
+                          <div class="wizard-item">
+                            <span>&nbsp;&nbsp;Feuerbach Bosch</span>
+                            <span class="station-meta">de:08111:6423</span>
+                          </div>
+                          <div class="wizard-item">
+                            <span>&nbsp;&nbsp;Feuerbach Friedhof</span>
+                            <span class="station-meta">de:08111:2422</span>
+                          </div>
+                          <div class="wizard-item">
+                            <span>&nbsp;&nbsp;Sportpark Feuerbach</span>
+                            <span class="station-meta">de:08111:153</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="preview-caption">Peek around — live departure board, door-to-door trips, and the interactive wizard.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Principles Bar -->
+        <div class="principles" aria-label="Project principles">
+          <span><b>01</b> Direct EFA-BW API</span>
+          <span><b>02</b> Zero API keys</span>
+          <span><b>03</b> Offline station resolver</span>
+          <span><b>04</b> Single static Go binary</span>
+        </div>
+
+        <!-- Section 1: Departures -->
+        <section class="section" id="departures" aria-labelledby="departures-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-number">LIVE BOARDS</div>
+              <h2 id="departures-title">
+                Real-time departures at your station<span class="accent">.</span>
+              </h2>
+            </div>
+            <p>
+              Instantly monitor live platforms, delay minutes, and vehicle locations from the official
+              EFA-BW transit backend without opening browser tabs or navigating heavy portals.
+            </p>
+          </div>
+
+          <div class="feature-grid four-col">
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M16 4v10l7 4"/><circle cx="16" cy="16" r="11"/></svg>
+              </span>
+              <h3>Live delay tracking</h3>
+              <p>
+                Distinguishes scheduled timetable slots from real-time GPS feeds. See live delays like <code>+4'</code> or <code>+7'</code> and on-time confirmations.
+              </p>
+              <code>vvs departures Schlossplatz</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M6 16h20M16 6v20"/><circle cx="16" cy="16" r="11"/></svg>
+              </span>
+              <h3>City transit first</h3>
+              <p>
+                Defaults to regional lines: U-Bahn, S-Bahn, buses, Rack Railway (Zacke), and Cable Car. Use <code>--all</code> to include long-distance ICE/IC trains.
+              </p>
+              <code>vvs departures --all</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M8 12h16v12H8zM12 12V8h8v4"/><path d="M14 18h4"/></svg>
+              </span>
+              <h3>Platforms &amp; bus bays</h3>
+              <p>
+                Shows exact train platforms (Gleis 1–16) and street-level bus/light-rail bays (e.g. Pos. 1, Pos. 5) at busy interchanges.
+              </p>
+              <code>platform and position info</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M6 10h20v14H6zM10 10V7h12v3"/><path d="M12 16h8M12 20h5"/></svg>
+              </span>
+              <h3>Flexible limits</h3>
+              <p>
+                Quick glimpse or full monitor board: adjust result count on demand with <code>--limit N</code> (defaults to 10 rows).
+              </p>
+              <code>vvs departures --limit 5</code>
+            </article>
+          </div>
+
+          <div style="margin-top: 36px; overflow-x: auto;">
+            <table class="diff-table" aria-label="Sample departure line coverage">
+              <thead>
+                <tr>
+                  <th>Mode</th>
+                  <th>Examples</th>
+                  <th>Coverage in vvs</th>
+                  <th>Real-Time Support</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="tier">Stadtbahn (U-Bahn)</td>
+                  <td>U1, U2, U5, U6, U7, U12, U15…</td>
+                  <td>All SSB light rail lines in Stuttgart &amp; surrounding valleys</td>
+                  <td>Live delay &amp; cancelled status</td>
+                </tr>
+                <tr>
+                  <td class="tier">S-Bahn Stuttgart</td>
+                  <td>S1, S2, S3, S4, S5, S6, S60, S62</td>
+                  <td>Full regional network from Herrenberg to Kirchheim &amp; Backnang</td>
+                  <td>Live track &amp; delay minutes</td>
+                </tr>
+                <tr>
+                  <td class="tier">City &amp; Regional Bus</td>
+                  <td>40, 42, 43, 44, 91, 92, Express…</td>
+                  <td>All municipal SSB and regional district bus lines</td>
+                  <td>Live bay position (Pos. 1–8)</td>
+                </tr>
+                <tr>
+                  <td class="tier">Zacke &amp; Seilbahn</td>
+                  <td>Linie 10 (Zahnradbahn), 20 (Seilbahn)</td>
+                  <td>Iconic historic transport up to Degerloch and Waldfriedhof</td>
+                  <td>Live departures</td>
+                </tr>
+                <tr>
+                  <td class="tier">Regional &amp; Intercity</td>
+                  <td>MEX, RE, IRE, IC, ICE</td>
+                  <td>Included when passing the <code>--all</code> flag</td>
+                  <td>Live DB / EFA status</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section 2: Trips & Natural Time -->
+        <section class="section" id="trips" aria-labelledby="trips-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-number">ROUTE PLANNER</div>
+              <h2 id="trips-title">
+                Door-to-door trips with natural time<span class="accent">.</span>
+              </h2>
+            </div>
+            <p>
+              Plan connections effortlessly with flexible German and English time syntax.
+              Store your home stop once and query routes home or to appointments in seconds.
+            </p>
+          </div>
+
+          <div class="feature-grid four-col">
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M12 8h8M16 8v16M8 24h16"/></svg>
+              </span>
+              <h3>Natural time syntax</h3>
+              <p>
+                Write times inline: <code>um morgen 8:00</code>, <code>friday</code>, <code>17:30</code>, <code>2026-10-01 08:00</code>, or <code>1.10.</code>
+              </p>
+              <code>German &amp; English support</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M4 16l12-10 12 10v12H4z"/><path d="M12 28V16h8v12"/></svg>
+              </span>
+              <h3>Home station preset</h3>
+              <p>
+                Configure your home stop once in <code>~/.config/vvs.json</code>. Running bare <code>vvs to &lt;dest&gt;</code> routes directly from home.
+              </p>
+              <code>vvs home Schlossplatz</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M16 4v12l8 4"/><circle cx="16" cy="16" r="11"/></svg>
+              </span>
+              <h3>Arrive-by mode</h3>
+              <p>
+                Need to reach an interview or flight on time? Use <code>--arrive</code> to calculate departures based on your target arrival time.
+              </p>
+              <code>vvs to Flughafen --arrive</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M6 12h20M10 6v12M22 6v12"/><circle cx="16" cy="20" r="6"/></svg>
+              </span>
+              <h3>Leg &amp; transfer clarity</h3>
+              <p>
+                Every trip prints exact walking minutes, transfer counts (<code>0×</code> direct, <code>1×</code>, <code>2×</code>), and overall duration.
+              </p>
+              <code>walk 2 min · U6 · 0:10</code>
+            </article>
+          </div>
+
+          <div style="margin-top: 36px; overflow-x: auto;">
+            <table class="diff-table" aria-label="Trip planning command patterns">
+              <thead>
+                <tr>
+                  <th>Command Pattern</th>
+                  <th>Interpretation</th>
+                  <th>Use Case</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="tier"><code>vvs to Feuerbach</code></td>
+                  <td>Depart from configured home station now</td>
+                  <td>Quick commute back or head to an errand</td>
+                </tr>
+                <tr>
+                  <td class="tier"><code>vvs from Feuerbach --at 17:30</code></td>
+                  <td>Depart Feuerbach at 17:30 towards home</td>
+                  <td>Heading home after work or gym</td>
+                </tr>
+                <tr>
+                  <td class="tier"><code>vvs Feuerbach to Schlossplatz</code></td>
+                  <td>Custom origin to destination connection</td>
+                  <td>Ad-hoc routing between any two stops</td>
+                </tr>
+                <tr>
+                  <td class="tier"><code>vvs to Schlossplatz um morgen 8:00</code></td>
+                  <td>Inline natural language departure time</td>
+                  <td>Schedule morning commute the night before</td>
+                </tr>
+                <tr>
+                  <td class="tier"><code>vvs to Schlossplatz --arrive --at 08:30</code></td>
+                  <td>Arrive at Schlossplatz by 08:30</td>
+                  <td>Appointments, meetings, or flights</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section 3: Stop Resolver & JSON -->
+        <section class="section" id="stops" aria-labelledby="stops-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-number">OFFLINE INDEX &amp; UNIX PIPES</div>
+              <h2 id="stops-title">
+                10,000+ stops offline. Ready for unix pipes<span class="accent">.</span>
+              </h2>
+            </div>
+            <p>
+              Every station in the VVS network is indexed locally into the binary.
+              Fuzzy station lookup takes milliseconds offline, with zero network lag.
+            </p>
+          </div>
+
+          <div class="feature-grid three-col">
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><circle cx="14" cy="14" r="8"/><path d="M20 20l8 8"/></svg>
+              </span>
+              <h3>Fuzzy &amp; umlaut-safe</h3>
+              <p>
+                Typing <code>feuerb</code>, <code>charlottenpl</code>, or <code>vaih</code> resolves instantly. Umlauts (ä, ö, ü) and German ß normalize automatically.
+              </p>
+              <code>vvs search feuerb</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M4 8h24v16H4zM10 8v16M22 8v16"/></svg>
+              </span>
+              <h3>Official EFA IDs</h3>
+              <p>
+                Pass official regional stop IDs like <code>5006022</code> or <code>de:08111:6022</code> directly when writing deterministic automation scripts.
+              </p>
+              <code>vvs departures de:08111:6022</code>
+            </article>
+
+            <article>
+              <span class="feature-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32"><path d="M8 8l6 8-6 8M18 24h6"/></svg>
+              </span>
+              <h3>Clean JSON piping</h3>
+              <p>
+                Pass <code>--json</code> to pipe real-time transit data directly into Waybar, Polybar, Raycast, Neovim, or custom shell automation scripts.
+              </p>
+              <code>vvs departures --json | jq .</code>
+            </article>
+          </div>
+
+          <!-- Interactive Station Finder Demo Widget -->
+          <div class="search-widget" aria-label="Interactive station search preview">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <strong style="font-size: 14px; color: var(--text);">Try the Stop Resolver</strong>
+                <span style="font-size: 11px; color: var(--muted); margin-left: 8px;">Fuzzy search sample preview</span>
+              </div>
+              <span style="font-size: 11px; color: var(--accent);">Offline &amp; instant</span>
+            </div>
+
+            <div class="search-chips" aria-label="Quick search suggestions">
+              <span>Quick tests:</span>
+              <button class="search-chip" type="button" data-search-chip="Schlossplatz">Schlossplatz</button>
+              <button class="search-chip" type="button" data-search-chip="Hauptbahnhof">Hauptbahnhof</button>
+              <button class="search-chip" type="button" data-search-chip="Feuerbach">Feuerbach</button>
+              <button class="search-chip" type="button" data-search-chip="Flughafen">Flughafen</button>
+              <button class="search-chip" type="button" data-search-chip="Marienplatz">Marienplatz</button>
+              <button class="search-chip" type="button" data-search-chip="Vaihingen">Vaihingen</button>
+            </div>
+
+            <div class="search-input-wrapper">
+              <span class="search-icon" aria-hidden="true">❯</span>
+              <input
+                id="station-search-input"
+                class="search-input"
+                type="text"
+                placeholder="Type a station name or part of an ID (e.g. feuerb, cannstatt, 6022)..."
+                value="feuerb"
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Filter station sample"
+              />
+            </div>
+
+            <div id="station-search-results" class="station-results" aria-live="polite">
+              <!-- Populated by assets/site.js -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: Commands Reference -->
+        <section class="section" id="commands" aria-labelledby="commands-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-number">COMMAND REFERENCE</div>
+              <h2 id="commands-title">
+                Clean UNIX commands &amp; flags<span class="accent">.</span>
+              </h2>
+            </div>
+            <p>
+              Designed for terminal speed. Run commands directly with inline arguments,
+              launch interactive pickers when you want them, or pipe JSON into your scripts.
+            </p>
+          </div>
+
+          <div class="controls-grid">
+            <div>
+              <div class="cmd-card-grid" aria-label="Quick command reference">
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs departures [station]</span>
+                  <span class="cmd-desc">Live board for any station or home</span>
+                </div>
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs to &lt;station&gt;</span>
+                  <span class="cmd-desc">Trip connections from home to destination</span>
+                </div>
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs from &lt;station&gt;</span>
+                  <span class="cmd-desc">Trip connections from station back home</span>
+                </div>
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs &lt;from&gt; to &lt;to&gt;</span>
+                  <span class="cmd-desc">Connections between two custom stations</span>
+                </div>
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs search &lt;term&gt;</span>
+                  <span class="cmd-desc">List matching stations with EFA IDs</span>
+                </div>
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs to</span>
+                  <span class="cmd-desc">Interactive station &amp; time picker wizard</span>
+                </div>
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs to ?</span>
+                  <span class="cmd-desc">Interactive endpoint selector in a route</span>
+                </div>
+                <div class="cmd-card">
+                  <span class="cmd-name">vvs home [station]</span>
+                  <span class="cmd-desc">Show or set default home station</span>
+                </div>
+              </div>
+              <p class="preview-caption">Quick commands · Departures, trips, fuzzy search &amp; home</p>
+            </div>
+
+            <div class="hotkeys-list">
+              <div class="hotkey-row">
+                <span><kbd>--at WHEN</kbd></span>
+                <span>Date/time: "8:00", "morgen 7:45", "friday", "1.10."</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>--arrive</kbd></span>
+                <span>Calculate trips to arrive by target time</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>--all</kbd></span>
+                <span>Include ICE/IC non-local trains on boards</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>--limit N</kbd></span>
+                <span>Max departures to display (default 10)</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>--json</kbd></span>
+                <span>Machine-readable JSON output for scripts &amp; status bars</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>↑ / ↓</kbd> &nbsp; <kbd>h / j / k / l</kbd></span>
+                <span>Navigate stations in interactive picker</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>Tab</kbd></span>
+                <span>Switch between station search and time entry in wizard</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>Enter</kbd></span>
+                <span>Confirm selected station and execute query</span>
+              </div>
+              <div class="hotkey-row">
+                <span><kbd>Esc</kbd> · <kbd>Ctrl+C</kbd></span>
+                <span>Exit interactive picker wizard</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Installation -->
+        <section class="install" id="install" aria-labelledby="install-title">
+          <div class="install-grid">
+            <div>
+              <div class="section-number">INSTALL</div>
+              <h2 id="install-title">
+                Single static Go binary<span class="accent">.</span>
+              </h2>
+              <p class="install-copy">
+                Install directly with Go in one command, or compile from source.
+                The embedded station index and EFA API client require zero external
+                dependencies, zero API keys, and zero background services.
+              </p>
+              <div class="release-note">
+                <strong>Config file:</strong> <code>~/.config/vvs.json</code><br />
+                Saves your home station so bare commands like <code>vvs departures</code> or <code>vvs to Feuerbach</code> know your base.
+              </div>
+            </div>
+
+            <div>
+              <div class="terminal">
+                <div class="terminal-title">
+                  Terminal <span>Install via go install</span>
+                </div>
+                <div class="command-row">
+                  <span class="prompt" aria-hidden="true">$</span>
+                  <code id="install-command">go install github.com/parnoldx/vvs@latest</code>
+                  <button
+                    class="copy-button"
+                    type="button"
+                    data-copy="install-command"
+                    data-feedback="copy-feedback"
+                    hidden
+                    aria-label="Copy installation command"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <p id="copy-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+              </div>
+
+              <ol class="install-steps">
+                <li>
+                  <strong>Install the binary.</strong>
+                  <span>Run <code>go install github.com/parnoldx/vvs@latest</code> to place <code>vvs</code> on your <code>$PATH</code>.</span>
+                </li>
+                <li>
+                  <strong>Set your home station.</strong>
+                  <span>Run <code>vvs home Schlossplatz</code> (or let the wizard prompt you on your first run).</span>
+                </li>
+                <li>
+                  <strong>Check transit instantly.</strong>
+                  <span>Run <code>vvs departures</code> or <code>vvs to Feuerbach</code> anytime from any shell.</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq" id="faq" aria-labelledby="faq-title">
+          <div class="section-heading">
+            <div>
+              <div class="section-number">FAQ</div>
+              <h2 id="faq-title">Frequently asked questions<span class="accent">.</span></h2>
+            </div>
+          </div>
+
+          <div class="faq-list">
+            <details>
+              <summary>Do I need an API key or account to use vvs?</summary>
+              <p>
+                No! <code>vvs</code> queries the public EFA-BW timetable endpoint directly. No API token, registration, or credentials are required.
+              </p>
+            </details>
+
+            <details>
+              <summary>Which regions and transit networks are supported?</summary>
+              <p>
+                The entire Verkehrs- und Tarifverbund Stuttgart (VVS) coverage area: Stuttgart city (SSB), Esslingen, Böblingen, Ludwigsburg, Rems-Murr-Kreis, and Göppingen. That includes all U-Bahn, S-Bahn, buses, regional trains, the Zahnradbahn (Zacke), and the historic Seilbahn.
+              </p>
+            </details>
+
+            <details>
+              <summary>How does offline station search work without network calls?</summary>
+              <p>
+                <code>vvs</code> embeds a compressed index of over 10,000 official regional stops generated by <code>tools/mkstations.py</code> from the official VVS Haltestellen registry. Name matching, fuzzy scoring, and umlaut normalization run entirely on your CPU in milliseconds.
+              </p>
+            </details>
+
+            <details>
+              <summary>Can I pipe output into status bars like Waybar or Polybar?</summary>
+              <p>
+                Yes! Every command supports <code>--json</code>. You can easily write a 3-line shell script or Waybar module that reads upcoming departures for your station and shows live delay indicators on your desktop bar.
+              </p>
+            </details>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-top">
+          <a class="brand" href="index.html">
+            <img class="brand-icon" src="assets/favicon.svg" alt="" width="28" height="28" />
+            <span>vvs<span class="accent">.</span></span>
+          </a>
+          <nav class="footer-links" aria-label="Footer navigation">
+            <a href="#departures">Departures</a>
+            <a href="#trips">Trips</a>
+            <a href="#stops">Stops</a>
+            <a href="#commands">Commands</a>
+            <a href="#install">Install</a>
+            <a href="https://github.com/parnoldx/vvs">GitHub ↗</a>
+            <a href="https://omarchy.org/">Omarchy ↗</a>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <span>Stuttgart region transit via the EFA-BW API. Made for the <a href="https://omarchy.org/">Omarchy</a> desktop.</span>
+          <span>Open source under MIT License.</span>
+        </div>
+        <div class="footer-wordmark" aria-hidden="true">vvs.</div>
+      </div>
+    </footer>
+  </body>
+</html>

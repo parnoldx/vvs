@@ -654,9 +654,15 @@ func printJSON(v any) {
 	enc.Encode(v)
 }
 
+var version = "dev"
+
 func main() {
 	useColor = isTTY(os.Stdout)
 	args := os.Args[1:]
+	if has(args, "--version") || has(args, "-v") {
+		fmt.Println("vvs " + version)
+		return
+	}
 	if has(args, "--help") || has(args, "-h") {
 		fmt.Print(usage)
 		return

@@ -4,6 +4,8 @@ Stuttgart region local transit from the terminal — departures and door-to-door
 trips (VVS/SSB) as a single static Go binary, querying the EFA-BW API directly.
 No API key, no runtime dependencies.
 
+**Website:** [parnoldx.github.io/vvs](https://parnoldx.github.io/vvs/)
+
 ```
 go install github.com/parnoldx/vvs@latest
 ```
