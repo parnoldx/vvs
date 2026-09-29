@@ -28,6 +28,22 @@ vvs to                                 # interactive station picker
 The first interactive run asks for your home station once and stores it in
 `~/.config/vvs.json` (change later with `vvs home <station>`).
 
+## Home station
+
+`vvs to` and `vvs from` are one-sided shortcuts around your home stop: `vvs to
+Feuerbach` finds trips from home to Feuerbach, `vvs from Feuerbach` the way
+back.
+
+On the first interactive run, `vvs` asks for your home station once — fuzzy
+search, pick from the matches — and saves it to `~/.config/vvs.json`. After
+that it just works; non-interactive runs (scripts, `--json`) skip the prompt
+and fail with a clear message until a home is set.
+
+```
+vvs home                 # show the current home station
+vvs home Feuerbach       # set (or change) it
+```
+
 Time phrases work inline — German or English:
 
 ```
