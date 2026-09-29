@@ -15,8 +15,11 @@ or `go install github.com/parnoldx/vvs@latest`.
 ## Usage
 
 ```
-vvs departures Schlossplatz            # departures board, local lines only
-vvs departures Schlossplatz --all      # include ICE/IC/…
+vvs                                     # departures at your home station
+vvs departures Schlossplatz             # departures board, local lines only
+vvs departures Schlossplatz --all       # include ICE/IC/…
+vvs home                               # show the home station
+vvs home Feuerbach                     # set (or change) the home station
 vvs to Feuerbach                       # trips home → Feuerbach
 vvs from Feuerbach --at 17:30          # trips Feuerbach → home
 vvs Feuerbach to Schlossplatz          # trips between two stations
@@ -26,23 +29,10 @@ vvs to                                 # interactive station picker
 ```
 
 The first interactive run asks for your home station once and stores it in
-`~/.config/vvs.json` (change later with `vvs home <station>`).
-
-## Home station
-
-`vvs to` and `vvs from` are one-sided shortcuts around your home stop: `vvs to
-Feuerbach` finds trips from home to Feuerbach, `vvs from Feuerbach` the way
-back.
-
-On the first interactive run, `vvs` asks for your home station once — fuzzy
-search, pick from the matches — and saves it to `~/.config/vvs.json`. After
-that it just works; non-interactive runs (scripts, `--json`) skip the prompt
-and fail with a clear message until a home is set.
-
-```
-vvs home                 # show the current home station
-vvs home Feuerbach       # set (or change) it
-```
+`~/.config/vvs.json`. Bare `vvs` then shows the departures board for it, and
+`vvs to` / `vvs from` are one-sided shortcuts: `vvs to Feuerbach` finds trips
+from home to Feuerbach, `vvs from Feuerbach` the way back. Scripts and `--json`
+skip the first-run prompt and fail with a clear message until a home is set.
 
 Time phrases work inline — German or English:
 
