@@ -18,8 +18,6 @@ or `go install github.com/parnoldx/vvs@latest`.
 vvs                                     # departures at your home station
 vvs departures Schlossplatz             # departures board, local lines only
 vvs departures Schlossplatz --all       # include ICE/IC/…
-vvs home                               # show the home station
-vvs home Feuerbach                     # set (or change) the home station
 vvs to Feuerbach                       # trips home → Feuerbach
 vvs from Feuerbach --at 17:30          # trips Feuerbach → home
 vvs Feuerbach to Schlossplatz          # trips between two stations
@@ -29,7 +27,7 @@ vvs to                                 # interactive station picker
 ```
 
 The first interactive run asks for your home station once and stores it in
-`~/.config/vvs.json`. Bare `vvs` then shows the departures board for it, and
+`~/.config/vvs.json` (change later with `vvs home <station>`). Bare `vvs` then shows the departures board for it, and
 `vvs to` / `vvs from` are one-sided shortcuts: `vvs to Feuerbach` finds trips
 from home to Feuerbach, `vvs from Feuerbach` the way back. Scripts and `--json`
 skip the first-run prompt and fail with a clear message until a home is set.
