@@ -7,8 +7,10 @@ No API key, no runtime dependencies.
 **Website:** [parnoldx.github.io/vvs](https://parnoldx.github.io/vvs/)
 
 ```
-go install github.com/parnoldx/vvs@latest
+curl -fsSL https://raw.githubusercontent.com/parnoldx/vvs/master/install.sh | sh
 ```
+
+or `go install github.com/parnoldx/vvs@latest`.
 
 ## Usage
 
