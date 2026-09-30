@@ -37,7 +37,7 @@ jobs:
             [ "$os" = windows ] && ext=.exe
             CGO_ENABLED=0 GOOS=$os GOARCH=$arch go build -trimpath \
               -ldflags "-s -w -X main.version=${GITHUB_REF_NAME}" -o out/vvs$ext .
-            tar czf "vvs-$t.tar.gz" -C out vvs$ext -C . README.md
+            tar czf "vvs-$t.tar.gz" -C out vvs$ext -C "$GITHUB_WORKSPACE" README.md
           done
           sha256sum vvs-*.tar.gz > checksums.txt
       - name: release
