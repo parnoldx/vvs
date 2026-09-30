@@ -761,7 +761,7 @@ func main() {
 			fmt.Println("no matches")
 		} else {
 			for i, s := range stations {
-				fmt.Printf("%d. %s  (%s)\n", i+1, s.Name, s.ID)
+				fmt.Printf("%d. %s  (%s)\n", i+1, label(s), s.ID)
 			}
 		}
 		return

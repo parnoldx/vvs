@@ -18,6 +18,8 @@ type indexedStop struct {
 	// folded whole-label strings and word lists, both umlaut variants
 	labelE, labelD string
 	wordsE, wordsD []string
+	// folded name without the place prefix — name hits outrank place hits
+	nameE, nameD string
 }
 
 var stationIndex []indexedStop
@@ -32,6 +34,8 @@ func init() {
 		st := indexedStop{Stop: s}
 		st.labelE = fold(label(s), true)
 		st.labelD = fold(label(s), false)
+		st.nameE = fold(s.Name, true)
+		st.nameD = fold(s.Name, false)
 		for _, w := range splitWords(st.labelE) {
 			st.wordsE = append(st.wordsE, expandAbbrev(w))
 		}
@@ -159,10 +163,28 @@ func tokensMatch(words []string, key string) (bool, int) {
 	return true, exact
 }
 
-// searchStations scores the embedded list: whole-query word match (100) >
-// word prefix (80) > substring (60) > all tokens matched (40 + 10/exact),
-// plus the Stuttgart place bias from the old stopfinder scoring. Stable on
-// list order for ties.
+// a single non-abbreviation query token appears word-bounded in the stop
+// name ("echterdingen bf" must find the stop named just "Echterdingen";
+// generic tokens like bf/bahnhof don't count as distinctive)
+func distinctiveNameHit(nameE, nameD, ke, kd string) bool {
+	for _, t := range splitWords(ke) {
+		if _, ab := abbrevs[t]; !ab && boundedMatch(nameE, t) {
+			return true
+		}
+	}
+	for _, t := range splitWords(kd) {
+		if _, ab := abbrevs[t]; !ab && boundedMatch(nameD, t) {
+			return true
+		}
+	}
+	return false
+}
+
+// searchStations scores the embedded list: word-bounded name hit (100) >
+// any single query token word-bounded in the name (95) > word prefix (80) >
+// word-bounded hit in the place part (70) > substring (60) > all tokens
+// matched (40 + 10/exact), plus the Stuttgart place bias from the old
+// stopfinder scoring. Stable on list order for ties.
 func searchStations(q string) []Stop {
 	key := strings.ToLower(strings.TrimSpace(q))
 	if key == "" {
@@ -177,10 +199,14 @@ func searchStations(q string) []Stop {
 	for i, st := range stationIndex {
 		v := 0
 		switch {
-		case boundedMatch(st.labelE, ke) || boundedMatch(st.labelD, kd):
+		case boundedMatch(st.nameE, ke) || boundedMatch(st.nameD, kd):
 			v = 100
+		case distinctiveNameHit(st.nameE, st.nameD, ke, kd):
+			v = 95
 		case wordPrefix(st.wordsE, ke) || wordPrefix(st.wordsD, kd):
 			v = 80
+		case boundedMatch(st.labelE, ke) || boundedMatch(st.labelD, kd):
+			v = 70
 		case strings.Contains(st.labelE, ke) || strings.Contains(st.labelD, kd):
 			v = 60
 		default:

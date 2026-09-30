@@ -184,6 +184,14 @@ func TestLocalSearch(t *testing.T) {
 	if s := asStop("5006022"); s == nil || s.ID != "5006022" {
 		t.Fatalf("raw id -> %+v", s)
 	}
+	// "echterdingen bf" finds the stop named just "Echterdingen" (de:08116:7003),
+	// not place-substring matches like "Leinfelden-Echterdingen, Hof"
+	if s := resolveStop("echterdingen bf"); s == nil || s.ID != "de:08116:7003" {
+		t.Fatalf("echterdingen bf -> %+v (want Echterdingen de:08116:7003)", s)
+	}
+	if s := resolveStop("echterdingen"); s == nil || s.ID != "de:08116:7003" {
+		t.Fatalf("echterdingen -> %+v (want Echterdingen de:08116:7003)", s)
+	}
 	// top-8 wizard results lead with the exact-name match for a prefix query
 	hits := searchStations("feuerb")
 	if len(hits) == 0 || hits[0].Name != "Feuerbach" {
