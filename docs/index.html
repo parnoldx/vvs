@@ -40,6 +40,11 @@
   <script src="assets/site.js" defer></script>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="arrow" viewBox="0 0 12 18">
+      <path d="M1 1v14l3.6-3.4 2.6 5.6 2.2-1-2.6-5.4H12z" fill="currentColor" stroke="#000" stroke-width="1"/>
+    </symbol>
+  </svg>
   <header class="top">
     <div class="wrap">
       <a class="brand" href="#top" id="brand" aria-label="vvs, back to top">
@@ -179,24 +184,49 @@
           <div class="vs-frame cut">
             <div class="in">
               <div class="scene bad" id="sc-bad">
-                <div class="scene-content">
-                  <div class="portal-mock">
-                    <div style="display:flex;justify-content:space-between;color:var(--muted)">
-                      <span>vvs.de · Connecting...</span>
-                      <span>4.8 MB</span>
+                <div class="screen">
+                  <div class="sbar">
+                    <span class="ws"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span>
+                    <span class="clk">Sunday 20:04</span>
+                    <span class="tray"><s></s><s></s></span>
+                  </div>
+                  <div class="track">
+                    <div>
+                      <div class="editor">
+                        <div class="tt">Browser — Loading transit portal...</div>
+                        <div style="font-size:9.5px;color:var(--muted);padding:8px">Fetching 4.2 MB JS bundles, fonts, telemetry...</div>
+                      </div>
+                      <div class="app a">
+                        <div class="tt">Cookie &amp; Ad Consent<span>vvs.de</span></div>
+                        <div class="fld"><small>Please accept 148 advertising cookies to proceed</small>Consent Required</div>
+                        <i style="width:70%"></i><i style="width:45%"></i>
+                      </div>
                     </div>
-                    <div class="cookie-alert">
-                      <b>GDPR Consent Required</b>
-                      <p style="margin:4px 0;font-size:8.5px;color:var(--ink-2)">Accept 148 cookies and advertising trackers to proceed.</p>
-                      <span style="font-size:8.5px;color:var(--red);border:1px solid var(--red);padding:2px 4px">[Accept All]</span>
+                    <div>
+                      <div class="app b">
+                        <div class="tt">Station Search<span>Waiting for network...</span></div>
+                        <i style="width:80%"></i><i style="width:55%"></i><i style="width:66%"></i>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="tally" aria-live="off">
-                  <span><b data-k="ram">0 MB</b>RAM</span>
-                  <span><b data-k="cookies">0</b>cookies</span>
-                  <span><b data-k="latency">0s</b>delay</span>
-                  <span><b data-k="clicks">0</b>clicks</span>
+                  <span class="ycw"><span class="yc"><svg viewBox="0 0 12 18" aria-hidden="true"><use href="#arrow"/></svg><em>you</em></span></span>
+                  <span class="hit" style="left:18%;top:30%"></span>
+                  <div class="dim"></div>
+                  <div class="cookie-modal">
+                    <b>GDPR &amp; Tracking Consent</b>
+                    <span>We and our 84 partners store cookies to personalize ads and analyze traffic.</span>
+                    <span style="font-size:9px;color:var(--muted);border:1px solid var(--line-2);padding:3px;display:inline-block;width:fit-content">[Accept All 148 Cookies]</span>
+                  </div>
+                  <div class="bad-ad">
+                    <span>Ad: Discount BahnCard 50!</span>
+                  </div>
+                  <div class="tally" aria-live="off">
+                    <span><b data-k="ram">0 MB</b>RAM</span>
+                    <span><b data-k="cookies">0</b>cookies</span>
+                    <span><b data-k="latency">0s</b>delay</span>
+                    <span><b data-k="clicks">0</b>clicks</span>
+                    <span><b data-k="trackers">0</b>trackers</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -209,23 +239,31 @@
           <div class="vs-frame cut">
             <div class="in">
               <div class="scene good" id="sc-good">
-                <div class="scene-content">
-                  <div style="background:var(--panel);border:1px solid var(--line);padding:10px;height:100%">
-                    <div style="color:var(--cyan);font-weight:600;margin-bottom:6px">Schlossplatz — departures · LIVE</div>
-                    <table class="deptable" style="font-size:10px">
+                <div class="screen">
+                  <div class="sbar">
+                    <span class="ws"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></span>
+                    <span class="clk">Sunday 20:04</span>
+                    <span class="tray"><s></s><s></s></span>
+                  </div>
+                  <div class="editor" style="top:12%;bottom:36px">
+                    <div class="tt">~/terminal — vvs departures Schlossplatz</div>
+                    <table class="deptable">
                       <tbody>
-                        <tr><td>20:04</td><td><span class="tag-u">U15</span></td><td>Ruhbank</td><td>Gleis 2</td><td class="ok">on time</td></tr>
-                        <tr><td>20:05</td><td><span class="tag-u">U6</span></td><td>Gerlingen</td><td>Gleis 1</td><td class="del">+7'</td></tr>
-                        <tr><td>20:06</td><td><span class="tag-u">U12</span></td><td>Dürrlewang</td><td>Gleis 1</td><td class="del">+4'</td></tr>
+                        <tr><td class="tm">20:04</td><td><span class="tag-u">U15</span></td><td>Ruhbank</td><td>Gleis 2</td><td class="ok">on time</td></tr>
+                        <tr><td class="tm">20:05</td><td><span class="tag-u">U6</span></td><td>Gerlingen</td><td>Gleis 1</td><td class="del">+7'</td></tr>
+                        <tr><td class="tm">20:06</td><td><span class="tag-u">U12</span></td><td>Dürrlewang</td><td>Gleis 1</td><td class="del">+4'</td></tr>
+                        <tr><td class="tm">20:06</td><td><span class="tag-bus">42</span></td><td>Erwin-Schoettle</td><td>Pos. 1</td><td class="ok">on time</td></tr>
                       </tbody>
                     </table>
                   </div>
-                </div>
-                <div class="tally" aria-live="off">
-                  <span><b data-k="ram">0 MB</b>RAM</span>
-                  <span><b data-k="cookies">0</b>cookies</span>
-                  <span><b data-k="latency">0s</b>delay</span>
-                  <span><b data-k="clicks">0</b>clicks</span>
+                  <span class="ycw"><span class="yc"><svg viewBox="0 0 12 18" aria-hidden="true"><use href="#arrow"/></svg><em>you</em></span></span>
+                  <div class="tally" aria-live="off">
+                    <span><b data-k="ram">0 MB</b>RAM</span>
+                    <span><b data-k="cookies">0</b>cookies</span>
+                    <span><b data-k="latency">0s</b>delay</span>
+                    <span><b data-k="clicks">0</b>clicks</span>
+                    <span><b data-k="trackers">0</b>trackers</span>
+                  </div>
                 </div>
               </div>
             </div>
